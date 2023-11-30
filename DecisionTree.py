@@ -67,3 +67,22 @@ class DecisionTree():
                     best_split['info_gain'] = info_gain
                     best_info_gain = info_gain
         return best_split
+
+
+    def create_tree(self,dataset,counter=0,max_depth=5):
+
+        if max_depth <= counter or dataset[:, -1] >= self.min_samples_split:
+            
+            best_split = self.best_split(dataset)
+
+            if best_split['info_gain'] > 0:
+                left = self.create_tree(best_split['left'], counter + 1, self.max_depth)
+                right = self.create_tree(best_split['right'], counter + 1, self.max_depth)
+                return Node(best_split['feature'], left, right, best_split['info_gain'],
+                             self.entropy(dataset[:, -1]))
+            
+            # Return the leaf node with the majority class if threshold is reached
+            Y = dataset[:, -1]
+            leaf_value = max(Y, key=list(Y).count)
+            return Node(data=leaf_value)
+        
