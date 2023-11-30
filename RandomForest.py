@@ -11,13 +11,18 @@ class RandomForest:
     def fit(self, X, y):
         # Create n_estimators decision trees
         for _ in range(self.n_estimators):
+
+            n_samples = X.shape[0]
+            # Randomly sample 25% of the data with replacement
+            n_samples = int(n_samples * .25)
+            rows = np.random.choice(n_samples, n_samples, replace=True)
+            a = X[rows]
+            b = y[rows]
+
             tree = DecisionTree(max_depth=self.max_depth)
-            # The order of the features doesnt matter so we can do it like this
-            random_features = np.random.choice(X.shape[1], size=4, replace=False)
-            X_subset = X[:, random_features]
 
-            tree.fit(X_subset, y)
-
+            tree.fit(a, b)
+            # Append the decision tree to the list of trees
             self.trees.append(tree)
 
     def predict(self, X):
