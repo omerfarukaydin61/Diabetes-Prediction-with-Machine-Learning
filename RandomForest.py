@@ -8,31 +8,23 @@ class RandomForest:
         self.max_depth = max_depth
         self.trees = []
 
-    def subset(self, X, y, size=200):
-        # Random sample with replacement n_features from X and y
-        X_y = np.concatenate((X, y), axis=1)
-        X_y_subset = np.random.choice(X_y.shape[0], size=size, replace=True)
-        X_y_subset = X_y[X_y_subset, :]
-        return X_y_subset
-    
-    def fit(self, X, y, size = 100, n_variables = 3):
-        for i in range(self.n_estimators):
-            X_y_subset = self.subset(X, y, size)
+    def fit(self, X, y):
+        # Create n_estimators decision trees
+        for _ in range(self.n_estimators):
+            tree = DecisionTree(max_depth=self.max_depth)
+            # The order of the features doesnt matter so we can do it like this
+            random_features = np.random.choice(X.shape[1], size=8, replace=False)
+            X_subset = X[:, random_features]
 
-            # choose n_variables from n_features randomly
-            selected_columns = np.random.choice(X_y_subset.shape[1] - 1, 3, replace=False)
+            tree.fit(X_subset, y)
 
-            # Keep the last column
-            selected_columns = np.append(selected_columns, X_y_subset.shape[1] - 1)
+            self.trees.append(tree)
 
-            selected_data = X_y_subset[:, selected_columns]
-
-            X_subset = selected_data[:, :-1]
-            y_subset = selected_data[:, -1].reshape(-1,1)
-            self.trees.append(DecisionTree(min_samples_split=3, max_depth=self.max_depth))
-            self.trees[i].fit(X_subset, y_subset)
-            
-    def predict(self,X):
-        predictions = []
-        for row in self.trees:
-            predictions.append(row.predict(X))
+    def predict(self, X):
+        # Predict the class labels for each tree and return the majority vote
+        predictions = [tree.predict(X) for tree in self.trees]
+        preds = []
+        for i in range(len(predictions[0])):
+            pred = [predictions[j][i] for j in range(len(predictions))]
+            preds.append(max(set(pred), key=pred.count))
+        return preds
