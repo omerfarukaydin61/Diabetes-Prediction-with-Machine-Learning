@@ -13,7 +13,7 @@ class RandomForest:
         for _ in range(self.n_estimators):
             tree = DecisionTree(max_depth=self.max_depth)
             # The order of the features doesnt matter so we can do it like this
-            random_features = np.random.choice(X.shape[1], size=8, replace=False)
+            random_features = np.random.choice(X.shape[1], size=4, replace=False)
             X_subset = X[:, random_features]
 
             tree.fit(X_subset, y)
