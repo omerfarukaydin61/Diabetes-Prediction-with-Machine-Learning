@@ -32,3 +32,7 @@ class RandomForest:
             self.trees.append(DecisionTree(min_samples_split=3, max_depth=self.max_depth))
             self.trees[i].fit(X_subset, y_subset)
             
+    def predict(self,X):
+        predictions = []
+        for row in self.trees:
+            predictions.append(row.predict(X))
