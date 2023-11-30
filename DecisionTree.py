@@ -94,19 +94,17 @@ class DecisionTree():
         return Node(data=leaf_value)
     
 
-    def predict(self, X,tree):
+    def predictions(self, X,tree):
         if tree.data != None:
             return tree.data
         feature_value = X[tree.feature]
         if feature_value <= tree.value:
-            return self.predict(X,tree.left)
+            return self.predictions(X,tree.left)
         else:
-            return self.predict(X,tree.right)
+            return self.predictions(X,tree.right)
     
-    def predictions(self, X):
+    def predict(self, X):
         predictions = []
         for row in X:
-            predictions.append(self.predict(row,self.root))
+            predictions.append(self.predictions(row,self.root))
         return predictions
-
-    
