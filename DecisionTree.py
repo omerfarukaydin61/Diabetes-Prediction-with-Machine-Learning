@@ -32,6 +32,13 @@ class DecisionTree():
 
         return entropy
 
+    def information_gain(self,parent,left,right):
+
+        # IG formula = entropy(parent) - (w)* entropy(children)
+        left_weight = len(left) / len(parent)
+        right_weight = len(right) / len(parent)
+
+        return self.entropy(parent) - (left_weight * self.entropy(left) + right_weight * self.entropy(right))
 
 
         
