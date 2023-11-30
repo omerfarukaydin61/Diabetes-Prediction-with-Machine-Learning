@@ -51,7 +51,7 @@ class DecisionTree():
     
     def best_split(self, dataset):
 
-        best_split = {}
+        best_split = {'feature': None, 'value': None, 'left': None, 'right': None, 'info_gain': -1000}
         best_info_gain = -1000
         # Loop through all the features
         for feature in range(dataset.shape[1]-1):
