@@ -108,3 +108,38 @@ class DecisionTree():
         for row in X:
             predictions.append(self.predictions(row,self.root))
         return predictions
+    
+
+    def confusion_matrix(self,y_true, y_pred):
+        # create a confusion matrix
+        confusion_matrix = np.zeros((2, 2), dtype=int)
+
+        # 1,1 = True Positive 0,0 = True Negative 0,1 = False Positive 1,0 = False Negative
+        for i in range(len(y_true)):
+            if y_pred[i] == 1 and y_true[i] == 1:
+                confusion_matrix[0][0] += 1
+            if y_pred[i] == 1 and y_true[i] == 0:
+                confusion_matrix[0][1] += 1
+            if y_pred[i] == 0 and y_true[i] == 1:
+                confusion_matrix[1][0] += 1
+            if y_pred[i] == 0 and y_true[i] == 0:
+                confusion_matrix[1][1] += 1
+
+        return confusion_matrix
+    
+    # Evaluation Metrics accuracy, precision, recall, f1 score
+    def metrics(self,confusion_matrix):
+        # Accuracy = TP + TN / TP + TN + FP + FN
+        accuracy = (confusion_matrix[0][0] + confusion_matrix[1][1]) / (
+                    confusion_matrix[0][0] + confusion_matrix[1][1] + confusion_matrix[0][1] + confusion_matrix[1][0])
+
+        # Precision = TP / TP + FP
+        precision = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[0][1])
+
+        # Recall = TP / TP + FN
+        recall = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[1][0])
+
+        # F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
+        f1_score = 2 * (precision * recall) / (precision + recall)
+
+        return accuracy, precision, recall, f1_score
