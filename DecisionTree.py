@@ -4,20 +4,20 @@ import pandas as pd
 
 
 class Node():
-    def __init__(self, feature=None, left=None, right=None, information_gain=None, entropy=None, data=None):
+    def __init__(self, feature=None, left=None, right=None, information_gain=None, value=None, data=None):
         self.feature = feature
+        self.data = data
         self.left = left
         self.right = right
         self.information_gain = information_gain
-        self.entropy = entropy
-        self.data = data
-
+        self.value = value
 
 class DecisionTree():
 
-    def __init__(self, min_samples_split=2,max_depth = 5):
+    def __init__(self, min_samples_split=2,max_depth = 2):
         self.min_samples_split = min_samples_split
         self.max_depth = max_depth
+        self.root = None
 
     def entropy(self,y_values):
         # Data is numpy array
@@ -68,7 +68,7 @@ class DecisionTree():
 
                     if info_gain > best_info_gain:
                         best_split['feature'] = feature
-                        best_split['data'] = value
+                        best_split['value'] = value
                         best_split['left'] = left_data
                         best_split['right'] = right_data
                         best_split['info_gain'] = info_gain
@@ -76,10 +76,9 @@ class DecisionTree():
         return best_split
 
 
-    def create_tree(self,dataset,counter=0,max_depth=3):
+    def create_tree(self,dataset,counter=0,max_depth=2):
 
         if max_depth >= counter and len(dataset[:, -1]) >= self.min_samples_split:
-
 
             best_split = self.best_split(dataset)
 
@@ -87,19 +86,19 @@ class DecisionTree():
                 left = self.create_tree(best_split['left'], counter + 1, self.max_depth)
                 right = self.create_tree(best_split['right'], counter + 1, self.max_depth)
                 return Node(best_split['feature'], left, right, best_split['info_gain'],
-                             self.entropy(dataset[:, -1]),best_split['data'])
+                             best_split['value'])
             
             # Return the leaf node with the majority class if threshold is reached
-            Y = dataset[:, -1]
-            leaf_value = max(Y, key=list(Y).count)
-            return Node(data=leaf_value)
-        
+        Y = dataset[:, -1]
+        leaf_value = max(Y, key=list(Y).count)
+        return Node(data=leaf_value)
+    
 
     def predict(self, X,tree):
         if tree.data != None:
             return tree.data
         feature_value = X[tree.feature]
-        if feature_value <= tree.data:
+        if feature_value <= tree.value:
             return self.predict(X,tree.left)
         else:
             return self.predict(X,tree.right)
@@ -109,3 +108,5 @@ class DecisionTree():
         for row in X:
             predictions.append(self.predict(row,self.root))
         return predictions
+
+    
