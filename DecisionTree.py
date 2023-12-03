@@ -114,16 +114,16 @@ class DecisionTree():
         # create a confusion matrix
         confusion_matrix = np.zeros((2, 2), dtype=int)
 
-        # 1,1 = True Positive 0,0 = True Negative 0,1 = False Positive 1,0 = False Negative
+        # 0,0 = TP  0,1 = FN 1,0 = FP  1,1 = TN
         for i in range(len(y_true)):
-            if y_pred[i] == 1 and y_true[i] == 1:
-                confusion_matrix[0][0] += 1
-            if y_pred[i] == 1 and y_true[i] == 0:
-                confusion_matrix[0][1] += 1
-            if y_pred[i] == 0 and y_true[i] == 1:
-                confusion_matrix[1][0] += 1
-            if y_pred[i] == 0 and y_true[i] == 0:
+            if y_true[i] == y_pred[i] == 0:
                 confusion_matrix[1][1] += 1
+            elif y_true[i] == 0 and y_pred[i] == 1:
+                confusion_matrix[1][0] += 1
+            elif y_true[i] == 1 and y_pred[i] == 0:
+                confusion_matrix[0][1] += 1
+            elif y_true[i] == y_pred[i] == 1:
+                confusion_matrix[0][0] += 1
 
         return confusion_matrix
     
@@ -134,10 +134,10 @@ class DecisionTree():
                     confusion_matrix[0][0] + confusion_matrix[1][1] + confusion_matrix[0][1] + confusion_matrix[1][0])
 
         # Precision = TP / TP + FP
-        precision = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[0][1])
+        precision = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[1][0])
 
         # Recall = TP / TP + FN
-        recall = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[1][0])
+        recall = confusion_matrix[0][0] / (confusion_matrix[0][0] + confusion_matrix[0][1])
 
         # F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
         f1_score = 2 * (precision * recall) / (precision + recall)
