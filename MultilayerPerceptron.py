@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+import numpy as np
 
 
 class MultilayerPerceptron(nn.Module):
@@ -82,14 +82,3 @@ class MultilayerPerceptron(nn.Module):
         # Forward pass
         y_pred = self.forward(X)
         return y_pred
-    
-    def confusion_matrix(self, y_true, y_pred):
-        return confusion_matrix(y_true, y_pred)
-    
-    def metrics(self, confusion_matrix):
-        tn, fp, fn, tp = confusion_matrix.ravel()
-        accuracy = (tp + tn) / (tp + tn + fp + fn)
-        precision = tp / (tp + fp)
-        recall = tp / (tp + fn)
-        f1_score = 2 * precision * recall / (precision + recall)
-        return accuracy, precision, recall, f1_score
