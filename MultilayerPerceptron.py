@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 
 
-class MLP(nn.Module):
+class MultilayerPerceptron(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, activation="relu", optimizer="adam"):
-        super(MLP, self).__init__()
+        super(MultilayerPerceptron, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
