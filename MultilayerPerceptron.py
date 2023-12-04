@@ -6,11 +6,12 @@ import numpy as np
 
 
 class MultilayerPerceptron(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size, activation="relu", optimizer="adam", verbose=True):
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01, activation="relu", optimizer="adam", verbose=True):
         super(MultilayerPerceptron, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
+        self.learning_rate = learning_rate
         self.activation = activation
         self.optimizer = optimizer
         self.verbose = verbose
@@ -31,9 +32,9 @@ class MultilayerPerceptron(nn.Module):
 
         # Create the optimizer
         if optimizer == "adam":
-            self.optimizer = optim.Adam(self.parameters(), lr=0.01)
+            self.optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
         elif optimizer == "sgd":
-            self.optimizer = optim.SGD(self.parameters(), lr=0.01)
+            self.optimizer = optim.SGD(self.parameters(), lr=self.learning_rate)
         else:
             raise ValueError("Invalid optimizer")
 
