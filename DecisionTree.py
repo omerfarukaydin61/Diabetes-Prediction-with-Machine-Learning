@@ -14,10 +14,11 @@ class Node():
 
 class DecisionTree():
 
-    def __init__(self, min_samples_split=2,max_depth = 2):
+    def __init__(self, min_samples_split=2,max_depth = 2, criteria = 'entropy'):
         self.min_samples_split = min_samples_split
         self.max_depth = max_depth
         self.root = None
+        self.criteria = criteria
 
     def entropy(self,y_values):
         # Data is numpy array
@@ -33,6 +34,16 @@ class DecisionTree():
             else:
                 entropy += 0
         return entropy
+    
+    def gini_index(self, y_values):
+        gini = 1
+        no_of_labels = len(np.unique(y_values))
+
+        for i in range(no_of_labels):
+            p = len(y_values[y_values == i]) / len(y_values)
+            gini -= p ** 2
+
+        return gini
 
 
     def information_gain(self,parent,left,right):
@@ -41,7 +52,11 @@ class DecisionTree():
         left_weight = len(left) / len(parent)
         right_weight = len(right) / len(parent)
 
-        return self.entropy(parent) - (left_weight * self.entropy(left) + right_weight * self.entropy(right))
+        if self.criteria == "gini":
+            return self.gini_index(parent) - (left_weight * self.gini_index(left) + right_weight * self.gini_index(right))
+        else:
+            # Default is entropy
+            return self.entropy(parent) - (left_weight * self.entropy(left) + right_weight * self.entropy(right))
 
 
     def fit(self, X, y):
