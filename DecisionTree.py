@@ -61,7 +61,7 @@ class DecisionTree():
 
     def fit(self, X, y):
         dataset = np.concatenate((X, y), axis=1)
-        self.root = self.create_tree(dataset)
+        self.root = self.create_tree(dataset, max_depth=self.max_depth)
 
     
     def best_split(self, dataset):
