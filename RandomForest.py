@@ -3,10 +3,12 @@ import numpy as np
 import random
 
 class RandomForest:
-    def __init__(self, n_estimators=100, max_depth=3):
+    def __init__(self, n_estimators=100, max_depth=3, criteria = 'entropy', sample_size = 0.25):
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.trees = []
+        self.sample_size = sample_size
+        self.criteria = criteria
 
     def fit(self, X, y):
         # n_estimators of decision trees
@@ -14,12 +16,12 @@ class RandomForest:
 
             n_samples = X.shape[0]
             # Randomly sampling 25% of the data with replacement
-            n_samples = int(n_samples * .25)
+            n_samples = int(n_samples * self.sample_size)
             rows = np.random.choice(n_samples, n_samples, replace=True)
             a = X[rows]
             b = y[rows]
 
-            tree = DecisionTree(max_depth=self.max_depth)
+            tree = DecisionTree(max_depth=self.max_depth, criteria = self.criteria)
 
             tree.fit(a, b)
             
