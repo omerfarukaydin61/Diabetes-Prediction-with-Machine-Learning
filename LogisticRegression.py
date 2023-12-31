@@ -1,4 +1,7 @@
 import numpy as np
+from sklearn.linear_model import LogisticRegression as LogisticRegressionSklearnModel
+
+
 class LogisticRegression:
     def __init__(self, learning_rate=0.01, num_iterations=1000):
         self.learning_rate = learning_rate
@@ -17,7 +20,7 @@ class LogisticRegression:
 
     def backward(self, X, y, y_pred):
         m = len(y)
-        
+
         # Calculate gradients
         dz = y_pred - y
         dw = (1/m) * np.dot(X.T, dz)
@@ -46,3 +49,14 @@ class LogisticRegression:
         # Round the values to 0 or 1
         y_pred = np.round(y_pred_prob)
         return y_pred
+
+
+class LogisticRegressionSklearn:
+    def __init__(self):
+        self.model = LogisticRegressionSklearnModel()
+
+    def fit(self, X, y):
+        self.model.fit(X, y)
+
+    def predict(self, X):
+        return self.model.predict(X)
