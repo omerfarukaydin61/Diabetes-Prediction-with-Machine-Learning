@@ -2,17 +2,19 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+import numpy as np
 
 
 class MultilayerPerceptron(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size, activation="relu", optimizer="adam"):
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01, activation="relu", optimizer="adam", verbose=True):
         super(MultilayerPerceptron, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
+        self.learning_rate = learning_rate
         self.activation = activation
         self.optimizer = optimizer
+        self.verbose = verbose
 
         # Create the linear layers
         self.linear1 = nn.Linear(input_size, hidden_size)
@@ -20,26 +22,26 @@ class MultilayerPerceptron(nn.Module):
 
         # Create the activation function
         if activation == "relu":
-            self.act = nn.ReLU()
+            self.activation = nn.ReLU()
         elif activation == "sigmoid":
-            self.act = nn.Sigmoid()
+            self.activation = nn.Sigmoid()
         elif activation == "tanh":
-            self.act = nn.Tanh()
+            self.activation = nn.Tanh()
         else:
             raise ValueError("Invalid activation function")
 
         # Create the optimizer
-        if optimizer == "sgd":
-            self.optimizer = optim.SGD(self.parameters(), lr=0.01)
         if optimizer == "adam":
-            self.optimizer = optim.Adam(self.parameters(), lr=0.01)
+            self.optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
+        elif optimizer == "sgd":
+            self.optimizer = optim.SGD(self.parameters(), lr=self.learning_rate)
         else:
             raise ValueError("Invalid optimizer")
 
     def forward(self, X):
         # Calculate the output values
         out = self.linear1(X)
-        out = self.act(out)
+        out = self.activation(out)
         out = self.linear2(out)
         return out
 
@@ -69,27 +71,15 @@ class MultilayerPerceptron(nn.Module):
             # Update the parameters
             self.optimizer.step()
             # Print the loss value every 10 epochs
-            if epoch % 100 == 0:
-                print(
-                    f"Epoch {epoch}, \033[91mTraining Loss: {loss.item()}\033[0m - \033[92mTraining Accuracy: {accuracy.item()}\033[0m")
-
-        plt.plot(self.loss_values)
-        plt.xlabel("Epochs")
-        plt.ylabel("Loss")
+            if epoch % 100 == 0 and self.verbose:
+                print(f"Epoch {epoch}, \033[91mTraining Loss: {loss.item()}\033[0m - \033[92mTraining Accuracy: {accuracy.item()}\033[0m")
+        if self.verbose:
+            plt.plot(self.loss_values)
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
 
     def predict(self, X):
         # Make predictions using the trained MLP
         # Forward pass
         y_pred = self.forward(X)
         return y_pred
-
-    def confusion_matrix(self, y_true, y_pred):
-        return confusion_matrix(y_true, y_pred)
-
-    def metrics(self, confusion_matrix):
-        tn, fp, fn, tp = confusion_matrix.ravel()
-        accuracy = (tp + tn) / (tp + tn + fp + fn)
-        precision = tp / (tp + fp)
-        recall = tp / (tp + fn)
-        f1_score = 2 * precision * recall / (precision + recall)
-        return accuracy, precision, recall, f1_score

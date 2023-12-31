@@ -1,6 +1,4 @@
 import numpy as np
-from sklearn.metrics import confusion_matrix
-
 class LogisticRegression:
     def __init__(self, learning_rate=0.01, num_iterations=1000):
         self.learning_rate = learning_rate
@@ -48,14 +46,3 @@ class LogisticRegression:
         # Round the values to 0 or 1
         y_pred = np.round(y_pred_prob)
         return y_pred
-
-    def confusion_matrix(self, y_true, y_pred):
-        return confusion_matrix(y_true, y_pred)
-    
-    def metrics(self, confusion_matrix):
-        tn, fp, fn, tp = confusion_matrix.ravel()
-        accuracy = (tp + tn) / (tp + tn + fp + fn)
-        precision = tp / (tp + fp)
-        recall = tp / (tp + fn)
-        f1_score = 2 * precision * recall / (precision + recall)
-        return accuracy, precision, recall, f1_score
