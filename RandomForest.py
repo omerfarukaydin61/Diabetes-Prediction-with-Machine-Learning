@@ -1,6 +1,7 @@
 from DecisionTree import DecisionTree
 import numpy as np
 import random
+np.random.seed(42)
 
 class RandomForest:
     def __init__(self, n_estimators=100, max_depth=3, criteria = 'entropy', sample_size = 0.25):
