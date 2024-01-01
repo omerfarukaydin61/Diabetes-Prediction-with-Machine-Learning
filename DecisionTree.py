@@ -27,6 +27,7 @@ class DecisionTree():
         # our labels are either 1 or 0
         no_of_labels = 2
 
+        # Entropy formula = -sum(p * log(p))
         for i in range(no_of_labels):
             p = len(y_values[y_values==i]) / len(y_values)
             if p != 0:
@@ -36,6 +37,7 @@ class DecisionTree():
         return entropy
     
     def gini_index(self, y_values):
+        # Gini formula = 1 - sum(p^2)
         gini = 1
         no_of_labels = len(np.unique(y_values))
 
@@ -60,6 +62,7 @@ class DecisionTree():
 
 
     def fit(self, X, y):
+        # Concatenating the X and y values
         dataset = np.concatenate((X, y), axis=1)
         self.root = self.create_tree(dataset, max_depth=self.max_depth)
 
@@ -68,19 +71,21 @@ class DecisionTree():
 
         best_split = {'feature': None, 'value': None, 'left': None, 'right': None, 'info_gain': -1000}
         best_info_gain = -1000
-        # Loop through all the features
+        # Looping through all the features
         for feature in range(dataset.shape[1]-1):
-            # Loop through all the unique values of the feature
+            # Looping through all the unique values of the feature
             for value in np.unique(dataset[:, feature]):
                 left_data = np.array([i for i in dataset if i[feature] <= value])
                 right_data = np.array([i for i in dataset if i[feature] > value])
 
+                # If length of left and right data is greater than 0 we calculate the information gain
                 if len(left_data) > 0 and len(right_data) > 0:
                     y = dataset[:, -1]
                     left_y = left_data[:, -1]
                     right_y = right_data[:, -1]
                     info_gain = self.information_gain(y, left_y, right_y)
 
+                    # If the calculated information gain is greater than the best information gain then we update the best split
                     if info_gain > best_info_gain:
                         best_split['feature'] = feature
                         best_split['value'] = value
@@ -93,6 +98,8 @@ class DecisionTree():
 
     def create_tree(self,dataset,counter=0,max_depth=2):
 
+        # If the max depth is reached or the number of samples in the dataset is less than the minimum samples
+        # required to split then we return the leaf node with the majority class
         if max_depth >= counter and len(dataset[:, -1]) >= self.min_samples_split:
 
             best_split = self.best_split(dataset)
@@ -103,12 +110,12 @@ class DecisionTree():
                 return Node(best_split['feature'], left, right, best_split['info_gain'],
                              best_split['value'])
             
-            # Return the leaf node with the majority class if threshold is reached
+        # Returning the leaf node with the majority class if threshold is reached
         Y = dataset[:, -1]
         leaf_value = max(Y, key=list(Y).count)
         return Node(data=leaf_value)
     
-
+    # predicting by traversing the tree
     def predictions(self, X,tree):
         if tree.data != None:
             return tree.data
@@ -117,16 +124,17 @@ class DecisionTree():
             return self.predictions(X,tree.left)
         else:
             return self.predictions(X,tree.right)
-    
+        
+    # Predicting for each row in the dataset
     def predict(self, X):
         predictions = []
         for row in X:
             predictions.append(self.predictions(row,self.root))
         return predictions
     
-
+    # Confusion Matrix
     def confusion_matrix(self,y_true, y_pred):
-        # create a confusion matrix
+        # Creating a confusion matrix
         confusion_matrix = np.zeros((2, 2), dtype=int)
 
         # 0,0 = TP  0,1 = FN 1,0 = FP  1,1 = TN

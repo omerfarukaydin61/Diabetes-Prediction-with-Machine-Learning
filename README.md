@@ -9,3 +9,5 @@ There are 4 models implemented by two people currently. Decision Trees and Rando
 You can see the implementation and interpretation of the first two in the notebook called 'Emre Hakan Erdemir'.
 
 You can see the implementation and interpretation of the latter two in the notebook called 'Omer Faruk Aydin'.
+
+Click on the notebook person's notebook you wish to see and select run all. The files that don't end with the extension .ipynb are the codes necessary to run the notebooks. Do not try to start them!

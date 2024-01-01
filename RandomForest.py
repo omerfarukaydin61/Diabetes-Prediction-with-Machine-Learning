@@ -16,7 +16,7 @@ class RandomForest:
         for _ in range(self.n_estimators):
 
             n_samples = X.shape[0]
-            # Randomly sampling 25% of the data with replacement
+            # Randomly sampling sample_size% of the data with replacement
             n_samples = int(n_samples * self.sample_size)
             rows = np.random.choice(n_samples, n_samples, replace=True)
             a = X[rows]
@@ -29,7 +29,7 @@ class RandomForest:
             self.trees.append(tree)
 
     def predict(self, X):
-        # Predict the class labels for each tree and return the majority vote
+        # Predicting the class labels for each tree and return the majority vote
         predictions = [tree.predict(X) for tree in self.trees]
         preds = []
         for i in range(len(predictions[0])):
