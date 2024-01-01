@@ -47,26 +47,35 @@ class MultilayerPerceptron(nn.Module):
             raise ValueError("Invalid optimizer")
 
     def forward(self, X):
+        # Forward pass
         return self.model(X)
 
     def loss(self, y_pred, y_true):
+        # Calculate the loss
         return self.criterion(y_pred, y_true)
 
     def fit(self, X, y, epochs):
+        # Train the MLP
         self.loss_values = []
         self.accuracy_values = []
+        # Train the MLP for the specified number of epochs
         for epoch in range(epochs):
             self.optimizer.zero_grad()
+            # Forward pass
             y_pred = self.forward(X)
+            # Calculate the loss
             loss = self.loss(y_pred, y)
+            # Backward pass
             loss.backward()
             self.loss_values.append(loss.item())
             accuracy = torch.mean(torch.eq(y_pred.argmax(dim=1), y).float())
             self.accuracy_values.append(accuracy.item())
             self.optimizer.step()
+            # Print the loss and accuracy at every 100th epoch
             if epoch % 100 == 0 and self.verbose:
                 print(
                     f"Epoch {epoch}, \033[91mTraining Loss: {loss.item()}\033[0m - \033[92mTraining Accuracy: {accuracy.item()}\033[0m")
+        # Plot the training curve
         if self.verbose:
             self.plot_training_curve()
 
