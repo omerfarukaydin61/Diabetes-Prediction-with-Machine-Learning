@@ -10,4 +10,10 @@ You can see the implementation and interpretation of the first two in the notebo
 
 You can see the implementation and interpretation of the latter two in the notebook called 'Omer Faruk Aydin'.
 
+## Installation
+Before running the project, please install the requirements by executing the following command:
+```bash
+pip install -r requirements.txt
+```
+
 Click on the notebook person's notebook you wish to see and select run all. The files that don't end with the extension .ipynb are the codes necessary to run the notebooks. Do not try to start them!
