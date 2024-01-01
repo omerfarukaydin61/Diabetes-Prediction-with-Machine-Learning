@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
+
 class MultilayerPerceptron(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01, activation="relu", optimizer="adam", verbose=True):
         super(MultilayerPerceptron, self).__init__()
@@ -16,7 +17,7 @@ class MultilayerPerceptron(nn.Module):
 
         # Loss function
         self.criterion = nn.CrossEntropyLoss()
-        
+
         # Create the activation function
         if activation == "relu":
             self.activation = nn.ReLU()
@@ -34,7 +35,7 @@ class MultilayerPerceptron(nn.Module):
             nn.Linear(hidden_size, output_size),
             nn.LogSoftmax(dim=1)
         )
-        
+
         # Create the optimizer
         if optimizer == "adam":
             self.optimizer = optim.Adam(
@@ -44,7 +45,7 @@ class MultilayerPerceptron(nn.Module):
                 self.parameters(), lr=self.learning_rate)
         else:
             raise ValueError("Invalid optimizer")
-        
+
     def forward(self, X):
         return self.model(X)
 
@@ -68,7 +69,7 @@ class MultilayerPerceptron(nn.Module):
                     f"Epoch {epoch}, \033[91mTraining Loss: {loss.item()}\033[0m - \033[92mTraining Accuracy: {accuracy.item()}\033[0m")
         if self.verbose:
             self.plot_training_curve()
-            
+
     def plot_training_curve(self):
         plt.plot(self.loss_values, label="Loss")
         plt.plot(self.accuracy_values, label="Accuracy")
@@ -76,7 +77,7 @@ class MultilayerPerceptron(nn.Module):
         plt.ylabel("Metrics")
         plt.legend()
         plt.show()
-        
+
     def predict(self, X):
         # Make predictions using the trained MLP
         # Forward pass
