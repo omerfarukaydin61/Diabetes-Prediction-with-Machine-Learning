@@ -10,6 +10,7 @@ class LogisticRegression:
         self.bias = None
 
     def sigmoid(self, z):
+        # Sigmoid activation function
         return 1 / (1 + np.exp(-z))
 
     def forward(self, X):
