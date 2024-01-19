@@ -1,5 +1,5 @@
-# Group_21
 # Diabetes prediction using PIMA Indians dataset
+
 Before clicking anything please read this!
 
 We implemented 4 methods to predict whether a person has or will develop diabetes or not given some medical data about that person. 
